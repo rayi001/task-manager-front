@@ -2,6 +2,10 @@
 
 A modern, responsive task management application built with React and Tailwind CSS.
 
+## User Story 9: React Frontend Application Creation
+
+This frontend application implements User Story 9, providing a complete web interface for the TaskSphere task management system.
+
 ## Features
 
 - **User Authentication**: Login, Register, Profile management
