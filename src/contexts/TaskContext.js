@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 
 const TaskContext = createContext();
 
@@ -52,7 +52,7 @@ export const TaskProvider = ({ children }) => {
   const fetchTasks = async () => {
     dispatch({ type: 'SET_LOADING' });
     try {
-      const response = await axios.get('http://localhost:8000/api/tasks/');
+      const response = await api.get('/api/tasks/');
       dispatch({
         type: 'FETCH_TASKS_SUCCESS',
         payload: response.data
@@ -67,7 +67,7 @@ export const TaskProvider = ({ children }) => {
 
   const createTask = async (taskData) => {
     try {
-      const response = await axios.post('http://localhost:8000/api/tasks/', taskData);
+      const response = await api.post('/api/tasks/', taskData);
       dispatch({
         type: 'ADD_TASK',
         payload: response.data
@@ -84,7 +84,7 @@ export const TaskProvider = ({ children }) => {
 
   const updateTask = async (id, taskData) => {
     try {
-      const response = await axios.patch(`http://localhost:8000/api/tasks/${id}/`, taskData);
+      const response = await api.patch(`/api/tasks/${id}/`, taskData);
       dispatch({
         type: 'UPDATE_TASK',
         payload: response.data
@@ -101,7 +101,7 @@ export const TaskProvider = ({ children }) => {
 
   const deleteTask = async (id) => {
     try {
-      await axios.delete(`http://localhost:8000/api/tasks/${id}/`);
+      await api.delete(`/api/tasks/${id}/`);
       dispatch({
         type: 'DELETE_TASK',
         payload: id
