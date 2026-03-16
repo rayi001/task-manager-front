@@ -24,6 +24,6 @@
     }
   ],
   "env": {
-    "REACT_APP_API_BASE_URL": "https://task-manager-back-mfmmebeox-ramons-projects-1a1b208a.vercel.app"
+    "REACT_APP_API_BASE_URL": "https://task-manager-back-omega.vercel.app"
   }
 }
