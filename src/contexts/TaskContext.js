@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
 import api from '../api';
 
 const TaskContext = createContext();
@@ -49,21 +49,34 @@ const initialState = {
 export const TaskProvider = ({ children }) => {
   const [state, dispatch] = useReducer(taskReducer, initialState);
 
-  const fetchTasks = async () => {
+  const fetchTasks = useCallback(async () => {
     dispatch({ type: 'SET_LOADING' });
     try {
-      const response = await api.get('/api/tasks/');
+      const response = await api.get('/api/tasks/', { timeout: 10000 }); // 10 second timeout
       dispatch({
         type: 'FETCH_TASKS_SUCCESS',
         payload: response.data
       });
     } catch (error) {
+      console.error('Failed to fetch tasks:', error);
+      let errorMessage = 'Unable to connect to the server.';
+      
+      if (error.code === 'ECONNABORTED') {
+        errorMessage = 'Connection timeout. Please check your internet connection.';
+      } else if (error.response?.status === 401) {
+        errorMessage = 'Please log in to view your tasks.';
+      } else if (error.response?.status === 403) {
+        errorMessage = 'You do not have permission to view these tasks.';
+      } else if (error.response?.status >= 500) {
+        errorMessage = 'Server error. Please try again later.';
+      }
+      
       dispatch({
         type: 'SET_ERROR',
-        payload: error.response?.data?.detail || 'Failed to fetch tasks'
+        payload: errorMessage
       });
     }
-  };
+  }, []);
 
   const createTask = async (taskData) => {
     try {
@@ -74,11 +87,22 @@ export const TaskProvider = ({ children }) => {
       });
       return response.data;
     } catch (error) {
+      console.error('Create task error:', error);
+      
+      // Preserve the original error for better handling
+      const enhancedError = {
+        ...error,
+        response: error.response ? {
+          ...error.response,
+          data: error.response.data || { error: 'Failed to create task' }
+        } : { data: { error: 'Network error: Failed to create task' } }
+      };
+      
       dispatch({
         type: 'SET_ERROR',
-        payload: error.response?.data || 'Failed to create task'
+        payload: enhancedError.response?.data?.error || 'Failed to create task'
       });
-      throw error;
+      throw enhancedError;
     }
   };
 
