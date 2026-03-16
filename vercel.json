@@ -10,6 +10,10 @@
     }
   ],
   "routes": [
+        {
+      "src": "/api/(.*)",
+      "dest": "https://task-manager-back-omega.vercel.app/api/$1"
+    },
     {
       "src": "/static/(.*)",
       "dest": "/static/$1"
@@ -22,8 +26,5 @@
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ],
-  "env": {
-    "REACT_APP_API_BASE_URL": "https://task-manager-back-omega.vercel.app"
-  }
+  ]
 }
