@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 
 const AuthContext = createContext();
 
@@ -58,17 +58,17 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (state.token) {
       localStorage.setItem('token', state.token);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${state.token}`;
+      api.defaults.headers.common['Authorization'] = `Bearer ${state.token}`;
     } else {
       localStorage.removeItem('token');
-      delete axios.defaults.headers.common['Authorization'];
+      delete api.defaults.headers.common['Authorization'];
     }
   }, [state.token]);
 
   const login = async (username, password) => {
     dispatch({ type: 'LOGIN_START' });
     try {
-      const response = await axios.post('http://localhost:8000/api/login/', {
+      const response = await api.post('/api/login/', {
         username,
         password
       });
@@ -94,7 +94,7 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     dispatch({ type: 'REGISTER_START' });
     try {
-      const response = await axios.post('http://localhost:8000/api/register/', userData);
+      const response = await api.post('/api/register/', userData);
       
       dispatch({
         type: 'REGISTER_SUCCESS',
