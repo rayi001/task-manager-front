@@ -40,6 +40,9 @@ const TaskForm = () => {
     setLoading(true);
     setError('');
 
+    // Debug: Log the form data being sent
+    console.log('Submitting task data:', formData);
+
     try {
       if (isEditing) {
         await updateTask(parseInt(id), formData);
@@ -48,7 +51,35 @@ const TaskForm = () => {
       }
       navigate('/tasks');
     } catch (err) {
-      setError(err.response?.data?.title?.[0] || err.response?.data?.error || 'Failed to save task');
+      console.error('Task creation error:', err);
+      console.error('Error response:', err.response?.data);
+      console.error('Error status:', err.response?.status);
+      
+      // Extract more detailed error information
+      let errorMessage = 'Failed to save task';
+      
+      if (err.response?.data) {
+        const errorData = err.response.data;
+        
+        // Handle field-specific errors
+        if (errorData.title) {
+          errorMessage = `Title: ${Array.isArray(errorData.title) ? errorData.title[0] : errorData.title}`;
+        } else if (errorData.description) {
+          errorMessage = `Description: ${Array.isArray(errorData.description) ? errorData.description[0] : errorData.description}`;
+        } else if (errorData.status) {
+          errorMessage = `Status: ${Array.isArray(errorData.status) ? errorData.status[0] : errorData.status}`;
+        } else if (errorData.detail) {
+          errorMessage = errorData.detail;
+        } else if (errorData.error) {
+          errorMessage = errorData.error;
+        } else if (typeof errorData === 'string') {
+          errorMessage = errorData;
+        }
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

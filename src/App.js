@@ -16,7 +16,7 @@ function App() {
   return (
     <AuthProvider>
       <TaskProvider>
-        <Router>
+        <Router future={{ v7_startTransition: true }}>
           <div className="App">
             <Navbar />
             <main className="main-content">
