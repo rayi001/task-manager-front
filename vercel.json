@@ -12,7 +12,7 @@
   "routes": [
         {
       "src": "/api/(.*)",
-      "dest": "https://task-manager-back-omega.vercel.app/api/$1"
+      "dest": "https://task-manager-back-two.vercel.app/api/$1"
     },
     {
       "src": "/static/(.*)",

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'https://task-manager-back-omega.vercel.app';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'https://task-manager-back-two.vercel.app' || 'https://task-manager-back-omega.vercel.app';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
