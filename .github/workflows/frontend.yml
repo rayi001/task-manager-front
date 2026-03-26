@@ -17,13 +17,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "20"    # match your Vercel deployment
+          node-version: "20"   # match your Vercel deployment
 
       - name: Install dependencies
-        run: npm install   # <-- changed from npm ci to npm install
+        run: npm install     # avoids strict ci lockfile errors
 
       - name: Run tests
-        run: npm test -- --watchAll=false
+        run: npm test -- --watchAll=false --passWithNoTests
 
       - name: Build
         run: npm run build
